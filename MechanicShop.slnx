@@ -1,0 +1,26 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docker-compose.yml" />
+    <File Path="Dockerfile" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/MechanicShop.Api/MechanicShop.Api.csproj" />
+    <Project Path="src/MechanicShop.Application/MechanicShop.Application.csproj" />
+    <Project Path="src/MechanicShop.Contracts/MechanicShop.Contracts.csproj" />
+    <Project Path="src/MechanicShop.Domain/MechanicShop.Domain.csproj" />
+    <Project Path="src/MechanicShop.Infrastructure/MechanicShop.Infrastructure.csproj" />
+    <Project Path="src/MechanicShop.Client/MechanicShop.Client.csproj" />
+  </Folder>
+</Solution>

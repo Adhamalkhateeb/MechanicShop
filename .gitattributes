@@ -1,0 +1,46 @@
+###############################################################################
+# Git Attributes
+#
+# This file defines how Git handles certain files in the repository.
+# It helps ensure consistent line endings across Windows, Linux, and macOS.
+###############################################################################
+
+###############################################################################
+# Normalize line endings for all text files.
+#
+# Git stores text files with LF in the repository and converts them to the
+# appropriate line endings when checking out files based on the user's Git
+# configuration (core.autocrlf).
+###############################################################################
+* text=auto
+
+###############################################################################
+# Binary files
+#
+# Prevent Git from attempting to diff or merge binary files.
+###############################################################################
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.bmp   binary
+*.ico   binary
+*.pdf   binary
+*.zip   binary
+*.7z    binary
+*.rar   binary
+*.dll   binary
+*.exe   binary
+*.pdb   binary
+*.so    binary
+*.dylib binary
+
+###############################################################################
+# Optional: Treat generated packages as binary.
+###############################################################################
+*.nupkg binary
+*.snupkg binary
+
+###############################################################################
+# End of file
+###############################################################################

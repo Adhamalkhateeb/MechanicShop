@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <PropertyGroup>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MechanicShop.Contracts\MechanicShop.Contracts.csproj" />
+  </ItemGroup>
+</Project>

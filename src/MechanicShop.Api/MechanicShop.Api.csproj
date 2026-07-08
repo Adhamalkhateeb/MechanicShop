@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\MechanicShop.Contracts\MechanicShop.Contracts.csproj" />
+    <ProjectReference Include="..\MechanicShop.Application\MechanicShop.Application.csproj" />
+    <ProjectReference Include="..\MechanicShop.Infrastructure\MechanicShop.Infrastructure.csproj" />
+    <ProjectReference Include="..\MechanicShop.Client\MechanicShop.Client.csproj" />
+  </ItemGroup>
+</Project>
