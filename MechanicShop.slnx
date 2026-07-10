@@ -23,4 +23,5 @@
     <Project Path="src/MechanicShop.Infrastructure/MechanicShop.Infrastructure.csproj" />
     <Project Path="src/MechanicShop.Client/MechanicShop.Client.csproj" />
   </Folder>
+  <Folder Name="/tests/" />
 </Solution>
