@@ -23,5 +23,11 @@
     <Project Path="src/MechanicShop.Infrastructure/MechanicShop.Infrastructure.csproj" />
     <Project Path="src/MechanicShop.Client/MechanicShop.Client.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/MechanicShop.Api.IntegrationTests/MechanicShop.Api.IntegrationTests.csproj" />
+    <Project Path="tests/MechanicShop.Application.SubcutaneousTests/MechanicShop.Application.SubcutaneousTests.csproj" />
+    <Project Path="tests/MechanicShop.Application.UnitTests/MechanicShop.Application.UnitTests.csproj" />
+    <Project Path="tests/MechanicShop.Domain.UnitTests/MechanicShop.Domain.UnitTests.csproj" />
+    <Project Path="tests/MechanicShop.Tests.Common/MechanicShop.Tests.Common.csproj" />
+  </Folder>
 </Solution>

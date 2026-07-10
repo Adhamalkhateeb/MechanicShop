@@ -31,7 +31,18 @@ public static class DependencyInjection
             .AddAppRateLimiting()
             .AddOutputCaching()
             .AddAppOpenTelemetry()
+            .AddCompression()
             .AddSignalR();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCompression(this IServiceCollection services)
+    {
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+        });
 
         return services;
     }
@@ -187,7 +198,9 @@ public static class DependencyInjection
     {
         app.UseExceptionHandler();
         app.UseStatusCodePages();
+        app.UseResponseCompression();
         app.UseHttpsRedirection();
+        app.UseRequestLogContext();
         app.UseSerilogRequestLogging();
         app.UseCors(configuration["AppSettings:CorsPolicyName"]!);
         app.UseRateLimiter();

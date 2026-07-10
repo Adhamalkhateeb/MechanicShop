@@ -11,7 +11,7 @@ public class AuditableEntityInterceptor(IUser user, TimeProvider dateTime) : Sav
     private readonly IUser _user;
     private readonly TimeProvider _dateTime;
 
-    public override InterceptionResult<int> SavingChanges(
+    public  InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
         InterceptionResult<int> result
     )
