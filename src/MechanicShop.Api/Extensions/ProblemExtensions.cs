@@ -17,10 +17,10 @@ public static class ProblemExtensions
             return ValidationProblem(errors);
         }
 
-        return Results.Problem();
+        return Problem(errors.First());
     }
 
-    private static IResult ToProblem(Error error)
+    private static IResult Problem(Error error)
     {
         var statusCode = error.Type switch
         {
