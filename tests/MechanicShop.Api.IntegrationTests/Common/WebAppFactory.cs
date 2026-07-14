@@ -17,8 +17,7 @@ namespace MechanicShop.Api.IntegrationTests.Common;
 public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     private readonly MsSqlContainer _dbContainer = new MsSqlBuilder(
-        "mcr.microsoft.com/mssql/server:2022-latest"
-    ).Build();
+        "mcr.microsoft.com/mssql/server:2022-latest").Build();
 
     public IMediator CreateMediator()
     {
@@ -54,8 +53,7 @@ public class WebAppFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifet
                 {
                     options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                     options.UseSqlServer(_dbContainer.GetConnectionString());
-                }
-            );
+                });
         });
     }
 }

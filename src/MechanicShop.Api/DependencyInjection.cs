@@ -2,8 +2,8 @@ using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Asp.Versioning;
 using MechanicShop.Api.Infrastructure;
-using MechanicShop.Api.Infrastructure.Services;
 using MechanicShop.Api.OpenApi;
+using MechanicShop.Api.Services;
 using MechanicShop.Application.Common.Interfaces;
 using Microsoft.AspNetCore.RateLimiting;
 using OpenTelemetry.Metrics;
@@ -39,10 +39,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddCompression(this IServiceCollection services)
     {
-        services.AddResponseCompression(options =>
-        {
-            options.EnableForHttps = true;
-        });
+        services.AddResponseCompression(options => options.EnableForHttps = true);
 
         return services;
     }
@@ -50,7 +47,6 @@ public static class DependencyInjection
     private static IServiceCollection AddCustomProblemDetails(this IServiceCollection services)
     {
         services.AddProblemDetails(options =>
-        {
             options.CustomizeProblemDetails = (context) =>
             {
                 context.ProblemDetails.Extensions.Add(
@@ -59,8 +55,8 @@ public static class DependencyInjection
                 );
                 context.ProblemDetails.Instance =
                     $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
-            };
-        });
+            }
+        );
         return services;
     }
 
@@ -86,7 +82,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddApiDocumentation(this IServiceCollection services)
     {
-        string[] versions = { "v1" };
+        string[] versions = ["v1"];
 
         foreach (var version in versions)
         {
@@ -115,10 +111,9 @@ public static class DependencyInjection
         services
             .AddControllers()
             .AddJsonOptions(options =>
-            {
                 options.JsonSerializerOptions.DefaultIgnoreCondition =
-                    JsonIgnoreCondition.WhenWritingNull;
-            });
+                    JsonIgnoreCondition.WhenWritingNull
+            );
         return services;
     }
 
@@ -127,7 +122,21 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
-        //TODO: Add CORS configuration
+        var allowedOrigins =
+            configuration.GetSection("AppSettings:AllowedOrigins").Get<string[]>() ?? [];
+
+        services.AddCors(options =>
+            options.AddPolicy(
+                "DefaultCorsPolicy",
+                policy =>
+                    policy
+                        .WithOrigins(allowedOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+            )
+        );
+
         return services;
     }
 
@@ -191,23 +200,23 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IApplicationBuilder UseCoreMiddlewares(
-        this IApplicationBuilder app,
-        IConfiguration configuration
-    )
+    extension(IApplicationBuilder app)
     {
-        app.UseExceptionHandler();
-        app.UseStatusCodePages();
-        app.UseResponseCompression();
-        app.UseHttpsRedirection();
-        app.UseRequestLogContext();
-        app.UseSerilogRequestLogging();
-        app.UseCors(configuration["AppSettings:CorsPolicyName"]!);
-        app.UseRateLimiter();
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.UseOutputCache();
+        public IApplicationBuilder UseCoreMiddlewares()
+        {
+            app.UseExceptionHandler();
+            app.UseStatusCodePages();
+            app.UseResponseCompression();
+            app.UseHttpsRedirection();
+            app.UseRequestLogContext();
+            app.UseSerilogRequestLogging();
+            app.UseCors("DefaultCorsPolicy");
+            app.UseRateLimiter();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseOutputCache();
 
-        return app;
+            return app;
+        }
     }
 }

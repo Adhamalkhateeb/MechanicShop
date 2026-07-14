@@ -12,8 +12,7 @@ public class UnhandledExceptionBehavior<TRequest, TResponse>(ILogger<TRequest> l
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct
-    )
+        CancellationToken ct)
     {
         try
         {
@@ -27,8 +26,7 @@ public class UnhandledExceptionBehavior<TRequest, TResponse>(ILogger<TRequest> l
                 ex,
                 "Request: Unhandled Exception for Request {Name} {@Request}",
                 requestName,
-                request
-            );
+                request);
 
             throw;
         }

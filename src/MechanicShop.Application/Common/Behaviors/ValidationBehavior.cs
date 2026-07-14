@@ -15,8 +15,7 @@ public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? valid
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct
-    )
+        CancellationToken ct)
     {
         if (_validator is null)
         {
@@ -31,8 +30,7 @@ public class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>? valid
         }
 
         var errors = validationResult.Errors.ConvertAll(error =>
-            Error.Validation(code: error.PropertyName, description: error.ErrorMessage)
-        );
+            Error.Validation(code: error.PropertyName, description: error.ErrorMessage));
 
         return (dynamic)errors;
     }

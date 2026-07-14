@@ -30,8 +30,7 @@ public class UnhandledExceptionBehavior
 
         // Act & Assert
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            _sut.Handle(request, next, TestContext.Current.CancellationToken)
-        );
+            _sut.Handle(request, next, TestContext.Current.CancellationToken));
 
         Assert.Equal(exception, ex);
         _logger
@@ -41,8 +40,7 @@ public class UnhandledExceptionBehavior
                 Arg.Any<EventId>(),
                 Arg.Is<object>(o => o.ToString()!.Contains("Unhandled Exception")),
                 exception,
-                Arg.Any<Func<object, Exception?, string>>()
-            );
+                Arg.Any<Func<object, Exception?, string>>());
     }
 
     [Fact]

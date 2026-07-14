@@ -29,15 +29,13 @@ public class CachingBehaviorTests
         var uncachedRequest = new NonCachedQuery();
         var behavior = new CachingBehavior<NonCachedQuery, string>(
             _cache,
-            Substitute.For<ILogger<CachingBehavior<NonCachedQuery, string>>>()
-        );
+            Substitute.For<ILogger<CachingBehavior<NonCachedQuery, string>>>());
 
         // Act
         var result = await behavior.Handle(
             uncachedRequest,
             _ => Task.FromResult("OK"),
-            CancellationToken.None
-        );
+            CancellationToken.None);
 
         // Assert
 
@@ -49,8 +47,7 @@ public class CachingBehaviorTests
                 Arg.Any<string>(),
                 Arg.Any<HybridCacheEntryOptions>(),
                 Arg.Any<string[]>(),
-                Arg.Any<CancellationToken>()
-            );
+                Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -72,16 +69,14 @@ public class CachingBehaviorTests
                 Arg.Do<object>(v => actualValue = v),
                 Arg.Do<HybridCacheEntryOptions>(o => actualOptions = o),
                 Arg.Do<string[]>(t => actualTags = t),
-                Arg.Do<CancellationToken>(ct => actualCancellationToken = ct)
-            )
+                Arg.Do<CancellationToken>(ct => actualCancellationToken = ct))
             .Returns(ValueTask.CompletedTask);
 
         // Act
         var result = await _sut.Handle(
             cachedRequest,
             _ => Task.FromResult(response),
-            CancellationToken.None
-        );
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(response, result);
@@ -107,8 +102,7 @@ public class CachingBehaviorTests
         var result = await _sut.Handle(
             request,
             _ => Task.FromResult(errorResult),
-            CancellationToken.None
-        );
+            CancellationToken.None);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -117,8 +111,7 @@ public class CachingBehaviorTests
         var setCalls = calls.Where(call =>
             call.GetMethodInfo().Name == nameof(HybridCache.SetAsync)
             && call.GetMethodInfo().IsGenericMethod
-            && call.GetMethodInfo().GetGenericArguments().FirstOrDefault() == typeof(Result<string>)
-        );
+            && call.GetMethodInfo().GetGenericArguments().FirstOrDefault() == typeof(Result<string>));
 
         Assert.Empty(setCalls);
     }

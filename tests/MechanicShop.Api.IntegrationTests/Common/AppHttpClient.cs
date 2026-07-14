@@ -17,8 +17,7 @@ public class AppHttpClient
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
-            token
-        );
+            token);
     }
 
     public void ClearAuthorizationHeader()
@@ -28,16 +27,14 @@ public class AppHttpClient
 
     public async Task<HttpResponseMessage> GetAsync(
         string requestUri,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         return await _httpClient.GetAsync(requestUri, cancellationToken);
     }
 
     public async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         return await _httpClient.SendAsync(request, cancellationToken);
     }
@@ -45,8 +42,7 @@ public class AppHttpClient
     public async Task<HttpResponseMessage> PostAsJsonAsync<T>(
         string requestUri,
         T value,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         return await _httpClient.PostAsJsonAsync(requestUri, value, cancellationToken);
     }
@@ -54,16 +50,14 @@ public class AppHttpClient
     public async Task<HttpResponseMessage> PutAsJsonAsync<T>(
         string requestUri,
         T value,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         return await _httpClient.PutAsJsonAsync(requestUri, value, cancellationToken);
     }
 
     public async Task<HttpResponseMessage> DeleteAsync(
         string requestUri,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         return await _httpClient.DeleteAsync(requestUri, cancellationToken);
     }
@@ -71,16 +65,14 @@ public class AppHttpClient
     public async Task<HttpResponseMessage> PatchAsJsonAsync<T>(
         string requestUri,
         T value,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         return await _httpClient.PatchAsJsonAsync(requestUri, value, cancellationToken);
     }
 
     public async Task<T?> GetFromJsonAsync<T>(
         string requestUri,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         var response = await GetAsync(requestUri, cancellationToken);
         response.EnsureSuccessStatusCode();
@@ -90,8 +82,7 @@ public class AppHttpClient
     public async Task<T?> PostAndGetFromJsonAsync<TRequest, T>(
         string requestUri,
         TRequest value,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         var response = await PostAsJsonAsync(requestUri, value, cancellationToken);
         response.EnsureSuccessStatusCode();

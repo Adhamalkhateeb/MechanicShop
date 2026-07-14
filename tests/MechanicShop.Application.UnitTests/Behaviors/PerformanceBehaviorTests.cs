@@ -30,8 +30,7 @@ public class PerformanceBehaviorTests
         var response = await _sut.Handle(
             request,
             _ => Task.FromResult(expectedResponse),
-            CancellationToken.None
-        );
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedResponse, response);
@@ -42,8 +41,7 @@ public class PerformanceBehaviorTests
                 Arg.Any<EventId>(),
                 Arg.Any<object>(),
                 Arg.Any<Exception>(),
-                Arg.Any<Func<object, Exception?, string>>()
-            );
+                Arg.Any<Func<object, Exception?, string>>());
     }
 
     [Fact]
@@ -63,8 +61,7 @@ public class PerformanceBehaviorTests
                 await Task.Delay(600, CancellationToken.None); // Simulate a long-running request
                 return expectedResponse;
             },
-            CancellationToken.None
-        );
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedResponse, response);
@@ -77,19 +74,16 @@ public class PerformanceBehaviorTests
                     o.ToString()!.Contains("Long Running Request")
                     && o.ToString()!.Contains("TestRequest")
                     && o.ToString()!.Contains("user-id")
-                    && o.ToString()!.Contains("adham")
-                ),
+                    && o.ToString()!.Contains("adham")),
                 null,
-                Arg.Any<Func<object, Exception?, string>>()
-            );
+                Arg.Any<Func<object, Exception?, string>>());
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     public async Task Handle_WhenUserIdIsNullOrEmpty_ShouldLogWarningWithEmptyUserName(
-        string? userId
-    )
+        string? userId)
     {
         // Arrange
         var request = new TestRequest { Name = "Test Request" };
@@ -104,8 +98,7 @@ public class PerformanceBehaviorTests
                 await Task.Delay(600, CancellationToken.None); // Simulate a long-running request
                 return expectedResponse;
             },
-            CancellationToken.None
-        );
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedResponse, response);
@@ -116,11 +109,9 @@ public class PerformanceBehaviorTests
                 Arg.Any<EventId>(),
                 Arg.Is<object>(o =>
                     o.ToString()!.Contains("Long Running Request")
-                    && o.ToString()!.Contains("TestRequest")
-                ),
+                    && o.ToString()!.Contains("TestRequest")),
                 null,
-                Arg.Any<Func<object, Exception?, string>>()
-            );
+                Arg.Any<Func<object, Exception?, string>>());
 
         await _identityService.DidNotReceive().GetUserNameAsync(Arg.Any<string>());
     }
@@ -137,8 +128,7 @@ public class PerformanceBehaviorTests
         var result = await _sut.Handle(
             request,
             (_) => Task.FromResult(expectedResponse),
-            cancellationToken
-        );
+            cancellationToken);
 
         // Assert
         Assert.Equal(expectedResponse, result);
@@ -154,8 +144,7 @@ public class PerformanceBehaviorTests
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            _sut.Handle(request, (_) => throw expectedException, cancellationToken)
-        );
+            _sut.Handle(request, (_) => throw expectedException, cancellationToken));
 
         Assert.Equal(expectedException, exception);
     }

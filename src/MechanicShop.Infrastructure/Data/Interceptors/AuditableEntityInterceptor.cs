@@ -1,5 +1,6 @@
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Domain.Common;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -8,13 +9,12 @@ namespace MechanicShop.Infrastructure.Data.Interceptors;
 
 public class AuditableEntityInterceptor(IUser user, TimeProvider dateTime) : SaveChangesInterceptor
 {
-    private readonly IUser _user;
-    private readonly TimeProvider _dateTime;
+    private readonly IUser _user = user;
+    private readonly TimeProvider _dateTime = dateTime;
 
-    public  InterceptionResult<int> SavingChanges(
+    public override InterceptionResult<int> SavingChanges(
         DbContextEventData eventData,
-        InterceptionResult<int> result
-    )
+        InterceptionResult<int> result)
     {
         UpdateEntities(eventData.Context);
 
@@ -24,8 +24,7 @@ public class AuditableEntityInterceptor(IUser user, TimeProvider dateTime) : Sav
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         UpdateEntities(eventData.Context);
 
@@ -90,7 +89,6 @@ public static class EntityEntryExtensions
             && (
                 r.TargetEntry.State == EntityState.Added
                 || r.TargetEntry.State == EntityState.Modified
-            )
-        );
+            ));
     }
 }

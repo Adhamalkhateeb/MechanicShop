@@ -10,8 +10,7 @@ public class BearerSecurityOperationTransformer : IOpenApiOperationTransformer
     public Task TransformAsync(
         OpenApiOperation operation,
         OpenApiOperationTransformerContext context,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var metaData = context.Description.ActionDescriptor.EndpointMetadata;
 
@@ -30,11 +29,9 @@ public class BearerSecurityOperationTransformer : IOpenApiOperationTransformer
                 [
                     new OpenApiSecuritySchemeReference(
                         JwtBearerDefaults.AuthenticationScheme,
-                        context.Document
-                    )
+                        context.Document)
                 ] = [],
-            }
-        );
+            });
 
         return Task.CompletedTask;
     }

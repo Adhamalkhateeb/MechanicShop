@@ -16,8 +16,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     public PerformanceBehavior(
         ILogger<TRequest> logger,
         IUser user,
-        IIdentityService identityService
-    )
+        IIdentityService identityService)
     {
         _timer = new Stopwatch();
 
@@ -29,8 +28,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct
-    )
+        CancellationToken ct)
     {
         _timer.Start();
 
@@ -57,8 +55,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
                 elapsedMilliseconds,
                 userId,
                 userName,
-                request
-            );
+                request);
         }
 
         return response;
