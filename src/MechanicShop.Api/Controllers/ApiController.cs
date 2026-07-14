@@ -1,15 +1,18 @@
 using MechanicShop.Domain.Common.Results;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MechanicShop.Api.Controllers;
 
 [ApiController]
+[Authorize]
 public class ApiController : ControllerBase
 {
     protected ActionResult Problem(List<Error> errors)
     {
-        if (!errors.Any())
+        if (errors.Count == 0)
         {
             return Problem();
         }
@@ -22,7 +25,7 @@ public class ApiController : ControllerBase
         return Problem(errors.First());
     }
 
-    private ActionResult Problem(Error error)
+    private ObjectResult Problem(Error error)
     {
         var statusCode = error.Type switch
         {

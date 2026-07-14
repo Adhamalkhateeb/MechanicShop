@@ -18,8 +18,7 @@ public class CachingBehavior<TRequest, TResponse>(
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct
-    )
+        CancellationToken ct)
     {
         if (request is not ICachedQuery cachedRequest)
         {
@@ -32,8 +31,7 @@ public class CachingBehavior<TRequest, TResponse>(
             cachedRequest.CacheKey,
             _ => new ValueTask<TResponse>((TResponse)(object)null!),
             new HybridCacheEntryOptions { Expiration = cachedRequest.Expiration },
-            cancellationToken: ct
-        );
+            cancellationToken: ct);
 
         if (result is null)
         {
@@ -48,8 +46,7 @@ public class CachingBehavior<TRequest, TResponse>(
                     res,
                     new HybridCacheEntryOptions { Expiration = cachedRequest.Expiration },
                     tags: cachedRequest.Tags,
-                    cancellationToken: ct
-                );
+                    cancellationToken: ct);
             }
         }
 

@@ -1,4 +1,5 @@
 using MechanicShop.Api;
+using MechanicShop.Api.Extensions;
 using MechanicShop.Application;
 using MechanicShop.Infrastructure;
 using Scalar.AspNetCore;
@@ -6,16 +7,21 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddRazorComponents()
+.A
+
 builder.Host.UseSerilog(
     (context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration)
 );
 
 builder
     .Services.AddPresentation(builder.Configuration)
-    .AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication();
 
 var app = builder.Build();
+
+await app.InitialiseDatabaseAsync();
 
 if (app.Environment.IsDevelopment())
 {
@@ -37,11 +43,9 @@ else
     app.UseHsts();
 }
 
-app.UseCoreMiddlewares(builder.Configuration);
+app.UseCoreMiddlewares();
 
 app.MapControllers();
-
-app.UseAntiforgery();
 
 app.MapStaticAssets();
 

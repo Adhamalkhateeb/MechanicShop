@@ -53,8 +53,7 @@ public sealed record Result<TValue> : IResult<TValue>
         {
             throw new ArgumentException(
                 "Cannot create an ErrorOr<TValue> from an empty collection of errors. Provide at least one error.",
-                nameof(errors)
-            );
+                nameof(errors));
         }
 
         _errors = errors;
@@ -79,8 +78,7 @@ public sealed record Result<TValue> : IResult<TValue>
 
     public TNextValue Match<TNextValue>(
         Func<TValue, TNextValue> onSuccess,
-        Func<List<Error>, TNextValue> onFailure
-    ) => IsSuccess ? onSuccess(Value) : onFailure(Errors);
+        Func<List<Error>, TNextValue> onFailure) => IsSuccess ? onSuccess(Value) : onFailure(Errors);
 
     public static implicit operator Result<TValue>(TValue value) => new(value);
 

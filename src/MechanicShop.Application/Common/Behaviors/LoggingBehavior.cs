@@ -31,7 +31,6 @@ public class LoggingBehavior<TRequest>(
             requestName,
             userId,
             userName,
-            request
-        );
+            request);
     }
 }

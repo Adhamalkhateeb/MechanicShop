@@ -1,5 +1,6 @@
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Domain.Common;
+using MechanicShop.Domain.Identity;
 using MechanicShop.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,10 +12,10 @@ namespace MechanicShop.Infrastructure.Data
         : IdentityDbContext<AppUser>(options),
             IAppDbContext
     {
-        //TODO: Add DbSets  here.
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
         public override async Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = default
-        )
+            CancellationToken cancellationToken = default)
         {
             await DispatchDomainEventsAsync(cancellationToken);
             return await base.SaveChangesAsync(cancellationToken);

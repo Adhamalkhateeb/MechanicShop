@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MechanicShop.Api.Infrastructure;
 
-public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService)
-    : IExceptionHandler
+public class GlobalExceptionHandler(
+    IProblemDetailsService problemDetailsService,
+    IHostEnvironment environment
+) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -21,9 +23,9 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
                 Exception = exception,
                 ProblemDetails = new ProblemDetails
                 {
-                    Type = exception.GetType().Name,
-                    Title = "Application error",
-                    Detail = exception.Message,
+                    Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1",
+                    Title = "An unexpected error occurred.",
+                    Detail = environment.IsDevelopment() ? exception.Message : null,
                 },
             }
         );

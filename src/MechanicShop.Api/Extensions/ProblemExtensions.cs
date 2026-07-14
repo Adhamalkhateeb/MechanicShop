@@ -1,4 +1,5 @@
 using MechanicShop.Domain.Common.Results;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace MechanicShop.Api.Extensions;
@@ -7,7 +8,7 @@ public static class ProblemExtensions
 {
     public static IResult ToProblem(List<Error> errors)
     {
-        if (!errors.Any())
+        if (errors.Count == 0)
         {
             return Results.Problem();
         }

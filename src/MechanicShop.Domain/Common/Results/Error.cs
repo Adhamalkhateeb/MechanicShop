@@ -15,18 +15,15 @@ public readonly record struct Error
 
     public static Error Validation(
         string code = nameof(Validation),
-        string description = "Validation error"
-    ) => new(code, description, ErrorKind.Validation);
+        string description = "Validation error") => new(code, description, ErrorKind.Validation);
 
     public static Error NotFound(
         string code = nameof(NotFound),
-        string description = "Resource not found"
-    ) => new(code, description, ErrorKind.NotFound);
+        string description = "Resource not found") => new(code, description, ErrorKind.NotFound);
 
     public static Error Conflict(
         string code = nameof(Conflict),
-        string description = "Resource conflict"
-    ) => new(code, description, ErrorKind.Conflict);
+        string description = "Resource conflict") => new(code, description, ErrorKind.Conflict);
 
     public static Error Unauthorized(
         string code = nameof(Unauthorized),
@@ -34,18 +31,15 @@ public readonly record struct Error
 
     public static Error Forbidden(
         string code = nameof(Forbidden),
-        string description = "Forbidden"
-    ) => new(code, description, ErrorKind.Forbidden);
+        string description = "Forbidden") => new(code, description, ErrorKind.Forbidden);
 
     public static Error Unexpected(
         string code = nameof(Unexpected),
-        string description = "Unexpected error"
-    ) => new(code, description, ErrorKind.Unexpected);
+        string description = "Unexpected error") => new(code, description, ErrorKind.Unexpected);
 
     public static Error Failure(
         string code = nameof(Failure),
-        string description = "Operation failed"
-    ) => new(code, description, ErrorKind.Failure);
+        string description = "Operation failed") => new(code, description, ErrorKind.Failure);
 
     public static Error Create(string code, string description, ErrorKind type) =>
         new(code, description, type);
