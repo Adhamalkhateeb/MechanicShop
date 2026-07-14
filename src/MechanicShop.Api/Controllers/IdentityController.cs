@@ -18,7 +18,6 @@ namespace MechanicShop.Api.Controllers
 {
     [Route("identity")]
     [ApiVersionNeutral]
-    [AllowAnonymous]
     public class IdentityController(ISender sender) : ApiController
     {
         [HttpPost("token/generate")]
@@ -50,6 +49,7 @@ namespace MechanicShop.Api.Controllers
         }
 
         [HttpGet("current-user/claims")]
+        [Authorize]
         [ProducesResponseType<AppUserDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]

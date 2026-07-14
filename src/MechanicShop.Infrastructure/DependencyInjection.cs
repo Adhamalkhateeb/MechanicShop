@@ -19,8 +19,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         services.AddSingleton(TimeProvider.System);
 
@@ -65,8 +64,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddPersistenceServices(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
@@ -80,13 +78,11 @@ public static class DependencyInjection
                 options.AddInterceptors(sp.GetRequiredService<ISaveChangesInterceptor>());
                 options.UseSqlServer(
                     connectionString,
-                    b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
-                );
-            }
-        );
+                    b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
+            });
 
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
-        services.AddScoped<ApplicationDbContextInitialiser>();
+        services.AddScoped<ApplicationDbContextInitializer>();
 
         return services;
     }
@@ -98,16 +94,14 @@ public static class DependencyInjection
             {
                 Expiration = TimeSpan.FromMinutes(10),
                 LocalCacheExpiration = TimeSpan.FromSeconds(30),
-            }
-        );
+            });
 
         return services;
     }
 
     private static IServiceCollection AddJwtAuthentication(
         this IServiceCollection services,
-        JwtSettings jwtSettings
-    )
+        JwtSettings jwtSettings)
     {
         services
             .AddAuthentication(options =>
@@ -126,13 +120,11 @@ public static class DependencyInjection
 
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtSettings.Secret)
-                    ),
+                        Encoding.UTF8.GetBytes(jwtSettings.Secret)),
 
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
-                }
-            );
+                });
 
         return services;
     }

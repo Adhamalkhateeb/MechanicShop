@@ -1,13 +1,11 @@
 using MechanicShop.Domain.Common.Results;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MechanicShop.Api.Controllers;
 
 [ApiController]
-[Authorize]
 public class ApiController : ControllerBase
 {
     protected ActionResult Problem(List<Error> errors)

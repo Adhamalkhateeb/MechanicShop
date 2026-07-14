@@ -1,17 +1,19 @@
+using MechanicShop.Domain.Identity;
 using MechanicShop.Infrastructure.Identity;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace MechanicShop.Infrastructure.Data;
 
-public class ApplicationDbContextInitialiser(
-    ILogger<ApplicationDbContextInitialiser> logger,
+public class ApplicationDbContextInitializer(
+    ILogger<ApplicationDbContextInitializer> logger,
     AppDbContext context,
     UserManager<AppUser> userManager,
     RoleManager<IdentityRole> roleManager
 )
 {
-    private readonly ILogger<ApplicationDbContextInitialiser> _logger = logger;
+    private readonly ILogger<ApplicationDbContextInitializer> _logger = logger;
     private readonly AppDbContext _context = context;
     private readonly UserManager<AppUser> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
@@ -24,7 +26,7 @@ public class ApplicationDbContextInitialiser(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
+            _logger.LogError(ex, "An error occurred while initializing the database.");
             throw;
         }
     }
@@ -45,14 +47,13 @@ public class ApplicationDbContextInitialiser(
     public async Task TrySeedAsync()
     {
         // Seed default roles
-        var roles = new[] { "Manager", "Labor" };
+        var roles = new[] { Role.Manager.ToString(), Role.Labor.ToString() };
 
         foreach (var role in roles)
         {
             if (!await _roleManager.RoleExistsAsync(role))
             {
                 await _roleManager.CreateAsync(new IdentityRole(role));
-                _logger.LogInformation("Created role: {Role}", role);
             }
         }
 
@@ -71,12 +72,12 @@ public class ApplicationDbContextInitialiser(
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(adminUser, "Manager");
-                _logger.LogInformation("Created default admin user: {Email}", adminEmail);
+                await _userManager.AddToRoleAsync(adminUser, Role.Manager.ToString());
             }
             else
             {
-                _logger.LogWarning("Failed to create admin user: {Errors}",
+                _logger.LogWarning(
+                    "Failed to create admin user: {Errors}",
                     string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
