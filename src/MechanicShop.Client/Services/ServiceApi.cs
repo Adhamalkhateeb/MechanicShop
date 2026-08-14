@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text.Json;
-
 using MechanicShop.Client.Models;
 
 namespace MechanicShop.Client.Services;
@@ -12,13 +11,18 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
 
     // Private Helper Methods
 
-    private static async Task<ApiResult<T>> HandleErrorResponseAsync<T>(HttpResponseMessage response)
+    private static async Task<ApiResult<T>> HandleErrorResponseAsync<T>(
+        HttpResponseMessage response
+    )
     {
         var content = await response.Content.ReadAsStringAsync();
 
         try
         {
-            var problemDetails = JsonSerializer.Deserialize<ProblemDetails>(content, options: new() { PropertyNameCaseInsensitive = true });
+            var problemDetails = JsonSerializer.Deserialize<ProblemDetails>(
+                content,
+                options: new() { PropertyNameCaseInsensitive = true }
+            );
 
             if (problemDetails is not null)
             {
@@ -26,41 +30,48 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
                     problemDetails.Title ?? "Error",
                     problemDetails.Detail ?? "An error occurred",
                     problemDetails.Status ?? (int)response.StatusCode,
-                    problemDetails.Errors);
+                    problemDetails.Errors
+                );
             }
 
             return ApiResult<T>.Failure(
                 GetFriendlyErrorMessage(response.StatusCode),
                 content,
-                (int)response.StatusCode);
+                (int)response.StatusCode
+            );
         }
         catch (JsonException)
         {
             return ApiResult<T>.Failure(
-               GetFriendlyErrorMessage(response.StatusCode),
-               content,
-               statusCode: (int)response.StatusCode);
+                GetFriendlyErrorMessage(response.StatusCode),
+                content,
+                statusCode: (int)response.StatusCode
+            );
         }
     }
 
     private static Task<ApiResult> HandleErrorResponseAsync(HttpResponseMessage response)
     {
         return HandleErrorResponseAsync<object>(response)
-               .ContinueWith(static t => ApiResult.Failure(
-                   t.Result.ErrorMessage,
-                   t.Result.ErrorDetails,
-                   t.Result.StatusCode,
-                   t.Result.ValidationErrors));
+            .ContinueWith(static t =>
+                ApiResult.Failure(
+                    t.Result.ErrorMessage,
+                    t.Result.ErrorDetails,
+                    t.Result.StatusCode,
+                    t.Result.ValidationErrors
+                )
+            );
     }
 
     private static Task<ApiResult<T>> HandleExceptionAsync<T>(Exception ex, string message) =>
-    Task.FromResult(
-        ex switch
-        {
-            HttpRequestException => ApiResult<T>.Failure($"Network error occurred. {message}"),
-            TaskCanceledException => ApiResult<T>.Failure($"Request timed out. {message}"),
-            _ => ApiResult<T>.Failure($"An unexpected error occurred. {message}"),
-        });
+        Task.FromResult(
+            ex switch
+            {
+                HttpRequestException => ApiResult<T>.Failure($"Network error occurred. {message}"),
+                TaskCanceledException => ApiResult<T>.Failure($"Request timed out. {message}"),
+                _ => ApiResult<T>.Failure($"An unexpected error occurred. {message}"),
+            }
+        );
 
     private static Task<ApiResult> HandleExceptionAsync(Exception ex, string message) =>
         HandleExceptionAsync<object>(ex, message)
@@ -69,7 +80,9 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
                     t.Result.ErrorMessage,
                     t.Result.ErrorDetails,
                     t.Result.StatusCode,
-                    t.Result.ValidationErrors));
+                    t.Result.ValidationErrors
+                )
+            );
 
     private static string GetFriendlyErrorMessage(HttpStatusCode statusCode)
     {
