@@ -17,8 +17,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         services
             .AddCustomProblemDetails()
@@ -51,12 +50,10 @@ public static class DependencyInjection
             {
                 context.ProblemDetails.Extensions.Add(
                     "requestId",
-                    context.HttpContext.TraceIdentifier
-                );
+                    context.HttpContext.TraceIdentifier);
                 context.ProblemDetails.Instance =
                     $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
-            }
-        );
+            });
         return services;
     }
 
@@ -93,8 +90,7 @@ public static class DependencyInjection
                     options.AddDocumentTransformer<VersionInfoTransformer>();
                     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
                     options.AddOperationTransformer<BearerSecurityOperationTransformer>();
-                }
-            );
+                });
         }
 
         return services;
@@ -112,15 +108,13 @@ public static class DependencyInjection
             .AddControllers()
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.DefaultIgnoreCondition =
-                    JsonIgnoreCondition.WhenWritingNull
-            );
+                    JsonIgnoreCondition.WhenWritingNull);
         return services;
     }
 
     private static IServiceCollection AddConfiguredCors(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
         var allowedOrigins =
             configuration.GetSection("AppSettings:AllowedOrigins").Get<string[]>() ?? [];
@@ -133,9 +127,7 @@ public static class DependencyInjection
                         .WithOrigins(allowedOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials()
-            )
-        );
+                        .AllowCredentials()));
 
         return services;
     }
@@ -162,8 +154,7 @@ public static class DependencyInjection
                     options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     options.QueueLimit = 10;
                     options.AutoReplenishment = true;
-                }
-            );
+                });
         });
         return services;
     }
