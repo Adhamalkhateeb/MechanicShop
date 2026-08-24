@@ -7,8 +7,7 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
 {
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var authResult = await accountManagement.LoadAccessTokenFromStorageAsync();
 
@@ -19,8 +18,7 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
 
         request.Headers.Authorization = new AuthenticationHeaderValue(
             "Bearer",
-            authResult.AccessToken
-        );
+            authResult.AccessToken);
 
         var response = await base.SendAsync(request, cancellationToken);
 
@@ -36,8 +34,7 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
                 var newRequest = CloneRequest(request);
                 newRequest.Headers.Authorization = new AuthenticationHeaderValue(
                     "Bearer",
-                    newTokenResponse.AccessToken
-                );
+                    newTokenResponse.AccessToken);
                 newRequest.Headers.Add("X-Retry", "true");
 
                 return await base.SendAsync(newRequest, cancellationToken);

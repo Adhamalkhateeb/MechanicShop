@@ -1,9 +1,11 @@
 using System.Text;
+
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Infrastructure.Data;
 using MechanicShop.Infrastructure.Data.Interceptors;
 using MechanicShop.Infrastructure.Identity;
 using MechanicShop.Infrastructure.Settings;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -58,6 +60,9 @@ public static class DependencyInjection
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>();
+
+        services.AddAuthorizationBuilder()
+              .AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
 
         return services;
     }

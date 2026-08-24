@@ -14,4 +14,9 @@ public static class ApplicationErrors
 
     public static Error RefreshTokenInvalid =>
         Error.Unauthorized("Auth:RefreshToken:Invalid", "Invalid or expired refresh token.");
+
+    public static Error CustomerNotFound =>
+    Error.NotFound(
+           "ApplicationErrors.Customer.NotFound",
+           "Customer does not exist.");
 }

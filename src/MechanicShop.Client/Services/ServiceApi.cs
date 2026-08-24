@@ -12,8 +12,7 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
     // Private Helper Methods
 
     private static async Task<ApiResult<T>> HandleErrorResponseAsync<T>(
-        HttpResponseMessage response
-    )
+        HttpResponseMessage response)
     {
         var content = await response.Content.ReadAsStringAsync();
 
@@ -21,8 +20,7 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
         {
             var problemDetails = JsonSerializer.Deserialize<ProblemDetails>(
                 content,
-                options: new() { PropertyNameCaseInsensitive = true }
-            );
+                options: new() { PropertyNameCaseInsensitive = true });
 
             if (problemDetails is not null)
             {
@@ -30,23 +28,20 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
                     problemDetails.Title ?? "Error",
                     problemDetails.Detail ?? "An error occurred",
                     problemDetails.Status ?? (int)response.StatusCode,
-                    problemDetails.Errors
-                );
+                    problemDetails.Errors);
             }
 
             return ApiResult<T>.Failure(
                 GetFriendlyErrorMessage(response.StatusCode),
                 content,
-                (int)response.StatusCode
-            );
+                (int)response.StatusCode);
         }
         catch (JsonException)
         {
             return ApiResult<T>.Failure(
                 GetFriendlyErrorMessage(response.StatusCode),
                 content,
-                statusCode: (int)response.StatusCode
-            );
+                statusCode: (int)response.StatusCode);
         }
     }
 
@@ -58,9 +53,7 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
                     t.Result.ErrorMessage,
                     t.Result.ErrorDetails,
                     t.Result.StatusCode,
-                    t.Result.ValidationErrors
-                )
-            );
+                    t.Result.ValidationErrors));
     }
 
     private static Task<ApiResult<T>> HandleExceptionAsync<T>(Exception ex, string message) =>
@@ -70,8 +63,7 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
                 HttpRequestException => ApiResult<T>.Failure($"Network error occurred. {message}"),
                 TaskCanceledException => ApiResult<T>.Failure($"Request timed out. {message}"),
                 _ => ApiResult<T>.Failure($"An unexpected error occurred. {message}"),
-            }
-        );
+            });
 
     private static Task<ApiResult> HandleExceptionAsync(Exception ex, string message) =>
         HandleExceptionAsync<object>(ex, message)
@@ -80,9 +72,7 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
                     t.Result.ErrorMessage,
                     t.Result.ErrorDetails,
                     t.Result.StatusCode,
-                    t.Result.ValidationErrors
-                )
-            );
+                    t.Result.ValidationErrors));
 
     private static string GetFriendlyErrorMessage(HttpStatusCode statusCode)
     {
