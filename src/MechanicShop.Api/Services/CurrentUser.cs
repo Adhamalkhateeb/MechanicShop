@@ -9,5 +9,5 @@ public class CurrentUser(IHttpContextAccessor contextAccessor) : IUser
     private readonly IHttpContextAccessor _contextAccessor = contextAccessor;
 
     public string? Id =>
-        _contextAccessor.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        _contextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 }

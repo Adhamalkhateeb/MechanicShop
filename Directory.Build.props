@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <IsPackable>true</IsPackable>
-    <NoWarn>SA1633</NoWarn>
+    <NoWarn>SA1633;AV0018;AV0016;AV0029;AV0030</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers">

@@ -59,7 +59,7 @@ namespace MechanicShop.Api.Controllers
         [EndpointDescription("Returns user information for the currently authenticated user based on the access token.")]
         public async Task<IActionResult> GetCurrentUserClaims(CancellationToken ct)
         {
-            var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var result = await sender.Send(new GetUserByIdQuery(userId), ct);
 

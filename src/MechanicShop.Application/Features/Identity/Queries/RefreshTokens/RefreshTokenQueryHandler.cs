@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using MechanicShop.Application.Common.Errors;
 using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Domain.Common.Results;
@@ -32,7 +33,7 @@ public sealed class RefreshTokenQueryHandler(
             return ApplicationErrors.ExpiredAccessTokenInvalid;
         }
 
-        var userId = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {

@@ -1,7 +1,9 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
+
 using Blazored.LocalStorage;
+
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MechanicShop.Client.Identity;
@@ -30,8 +32,7 @@ public class CustomAuthenticationStateProvider(
             var httpClient = _httpClientFactory.CreateClient("MechanicShopClient");
             var result = await httpClient.PostAsJsonAsync(
                 "identity/token/generate",
-                new { email, password }
-            );
+                new { email, password });
 
             if (result.IsSuccessStatusCode)
             {
@@ -69,11 +70,24 @@ public class CustomAuthenticationStateProvider(
 
             if (userInfo is not null)
             {
-                var identity = new ClaimsIdentity(
-                    userInfo.Claims,
-                    nameof(CustomAuthenticationStateProvider)
-                );
-                user = new ClaimsPrincipal(identity);
+                List<Claim> claims =
+                [
+                    new(ClaimTypes.Name, userInfo.Email),
+                    new(ClaimTypes.NameIdentifier, userInfo.UserId),
+                    new(ClaimTypes.Email, userInfo.Email),
+                ];
+
+                foreach (var role in userInfo.Roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                claims.AddRange(userInfo.Claims.Select(c => new Claim(c.Type, c.Value)));
+
+                var id = new ClaimsIdentity(claims, nameof(CustomAuthenticationStateProvider));
+
+                user = new ClaimsPrincipal(id);
+
                 authenticated = true;
             }
         }
@@ -114,8 +128,7 @@ public class CustomAuthenticationStateProvider(
         var httpClient = _httpClientFactory.CreateClient("MechanicShopClient");
         var refreshResponse = await httpClient.PostAsJsonAsync(
             "identity/token/refresh-token",
-            new { ExpiredAccessToken = authResult.AccessToken, authResult.RefreshToken }
-        );
+            new { ExpiredAccessToken = authResult.AccessToken, authResult.RefreshToken });
 
         if (!refreshResponse.IsSuccessStatusCode)
         {

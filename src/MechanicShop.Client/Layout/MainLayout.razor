@@ -59,11 +59,13 @@
                     <AuthorizeView>
                         <Authorized>
                             <span class="badge text-light p-2 border rounded">
-                                <span class="bi bi-lock me-3" aria-hidden="true" style="vertical-align:middle"></span>
-                                @context.User.Identity?.Name.
+                                @context.User.Identity?.Name
+                            </span>
+                            <span class="badge text-bg-danger p-2 border rounded">
                                 <a href="logout"
-                                    class="link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover">
-                                    Logout</a>
+                                   class="link-body-emphasis ">
+                                    Logout
+                                </a>
                             </span>
                         </Authorized>
                         <NotAuthorized>
