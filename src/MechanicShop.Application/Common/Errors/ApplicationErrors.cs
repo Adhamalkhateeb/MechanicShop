@@ -19,4 +19,10 @@ public static class ApplicationErrors
     Error.NotFound(
            "ApplicationErrors.Customer.NotFound",
            "Customer does not exist.");
+
+
+    public static Error RepairTaskNotFound =>
+        Error.NotFound(
+                "RepairTask.NotFound",
+                "Repair task does not exist.");
 }
