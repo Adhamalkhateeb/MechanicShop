@@ -1,6 +1,9 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
+
 using MechanicShop.Client.Models;
+using MechanicShop.Contracts.Requests.Customers;
 
 namespace MechanicShop.Client.Services;
 
@@ -8,6 +11,130 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
 {
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient("MechanicShopClient");
     private readonly TimeZoneService _timeZoneService = timeZoneService;
+
+    #region Customers
+    public async Task<ApiResult<List<CustomerModel>>> GetCustomersAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("api/v1/customers");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var customers = await response.Content.ReadFromJsonAsync<List<CustomerModel>>();
+                return ApiResult<List<CustomerModel>>.Success(customers ?? []);
+            }
+
+            return await HandleErrorResponseAsync<List<CustomerModel>>(response);
+
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<List<CustomerModel>>(ex, "Failed to get customers.");
+        }
+
+
+    }
+
+    public async Task<ApiResult<CustomerModel>> GetCustomerAsync(Guid customerId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/v1/customers/{customerId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var customer = await response.Content.ReadFromJsonAsync<CustomerModel>();
+
+                if (customer is null)
+                {
+                    return ApiResult<CustomerModel>.Failure("Failed to get customer.");
+                }
+
+                return ApiResult<CustomerModel>.Success(customer!);
+            }
+
+            return await HandleErrorResponseAsync<CustomerModel>(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<CustomerModel>(ex, $"Failed to get customer {customerId}.");
+        }
+    }
+
+    public async Task<ApiResult<CustomerModel>> CreateCustomerAsync(CreateCustomerRequest request)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/v1/customers", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var customer = await response.Content.ReadFromJsonAsync<CustomerModel>();
+
+                if (customer is null)
+                {
+                    return ApiResult<CustomerModel>.Failure("Failed to create customer.");
+                }
+
+                return ApiResult<CustomerModel>.Success(customer!);
+            }
+
+            return await HandleErrorResponseAsync<CustomerModel>(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<CustomerModel>(ex, "Failed to create customer.");
+        }
+    }
+
+    public async Task<ApiResult<CustomerModel>> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request)
+    {
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/v1/customers/{customerId}", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var customer = await response.Content.ReadFromJsonAsync<CustomerModel>();
+
+                if (customer is null)
+                {
+                    return ApiResult<CustomerModel>.Failure("Failed to update customer.");
+                }
+
+                return ApiResult<CustomerModel>.Success(customer!);
+            }
+
+            return await HandleErrorResponseAsync<CustomerModel>(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<CustomerModel>(ex, $"Failed to update customer {customerId}.");
+        }
+    }
+
+    public async Task<ApiResult> DeleteCustomerAsync(Guid customerId)
+    {
+        try
+        {
+            var response = await _httpClient.DeleteAsync($"api/v1/customers/{customerId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return ApiResult.Success();
+            }
+
+            return await HandleErrorResponseAsync(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync(ex, $"Failed to delete customer {customerId}.");
+        }
+    }
+
+    #endregion
+
 
     // Private Helper Methods
 

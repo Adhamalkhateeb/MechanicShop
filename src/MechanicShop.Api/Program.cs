@@ -47,13 +47,13 @@ else
     app.UseHsts();
 }
 
+app.UseStaticFiles();
 app.UseCoreMiddlewares();
 
 app.MapControllers();
 
 app.UseAntiforgery();
 
-app.UseStaticFiles();
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()

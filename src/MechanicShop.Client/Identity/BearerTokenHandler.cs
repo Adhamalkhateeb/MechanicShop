@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace MechanicShop.Client.Identity;
@@ -9,6 +9,12 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        var requestPath = request.RequestUri?.AbsolutePath ?? string.Empty;
+        if (requestPath.Contains("identity/token", StringComparison.OrdinalIgnoreCase))
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+
         var authResult = await accountManagement.LoadAccessTokenFromStorageAsync();
 
         if (authResult?.AccessToken is null)
@@ -31,7 +37,7 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
 
             if (newTokenResponse is not null)
             {
-                var newRequest = CloneRequest(request);
+                var newRequest = await CloneRequestAsync(request);
                 newRequest.Headers.Authorization = new AuthenticationHeaderValue(
                     "Bearer",
                     newTokenResponse.AccessToken);
@@ -46,7 +52,7 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
         return response;
     }
 
-    private static HttpRequestMessage CloneRequest(HttpRequestMessage request)
+    private static async Task<HttpRequestMessage> CloneRequestAsync(HttpRequestMessage request)
     {
         var clone = new HttpRequestMessage(request.Method, request.RequestUri)
         {
@@ -57,7 +63,7 @@ public class BearerTokenHandler(IAccountManagement accountManagement) : Delegati
         if (request.Content != null)
         {
             var memoryStream = new MemoryStream();
-            request.Content.CopyToAsync(memoryStream).Wait();
+            await request.Content.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
             clone.Content = new StreamContent(memoryStream);
 

@@ -96,13 +96,13 @@ public sealed class CustomerController(ISender sender) : ApiController
         var result = await sender.Send(new UpdateCustomerCommand(customerId, request.Name, request.PhoneNumber, request.Email, vehicles), ct);
 
         return result.Match(
-            _ => NoContent(),
-            Problem);
+           response => Ok(response),
+           Problem);
     }
 
     [HttpDelete("{customerId:guid}")]
     [Authorize(Roles = nameof(Role.Manager))]
-    [ProducesResponseType<CustomerDto>(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     [EndpointSummary("Removes a customer.")]

@@ -15,7 +15,6 @@ public sealed class CreateCustomerRequest
     [RegularExpression(@"^\+?\d{7,15}$", ErrorMessage = "Phone number must be between 7 and 15 digits long and may start with '+'.")]
     public string PhoneNumber { get; set; } = string.Empty;
 
-
     [MinLength(1, ErrorMessage = "At least one vehicle is required")]
     public List<CreateVehicleRequest> Vehicles { get; set; } = [];
 }
