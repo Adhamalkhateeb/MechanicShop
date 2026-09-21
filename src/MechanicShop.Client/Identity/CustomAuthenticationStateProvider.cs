@@ -59,11 +59,20 @@ public class CustomAuthenticationStateProvider(
 
         try
         {
+            var authResult = await _localStorageService.GetItemAsync<TokenResponse>("authResult");
+            if (authResult is null || string.IsNullOrWhiteSpace(authResult.AccessToken))
+            {
+                return new AuthenticationState(unauthenticated);
+            }
+
             var httpClient = _httpClientFactory.CreateClient("MechanicShopClient");
 
             var userResponse = await httpClient.GetAsync("identity/current-user/claims");
 
-            userResponse.EnsureSuccessStatusCode();
+            if (!userResponse.IsSuccessStatusCode)
+            {
+                return new AuthenticationState(unauthenticated);
+            }
 
             var userJson = await userResponse.Content.ReadAsStringAsync();
             var userInfo = JsonSerializer.Deserialize<UserInfo>(userJson, _jsonSerializerOptions);
@@ -77,12 +86,21 @@ public class CustomAuthenticationStateProvider(
                     new(ClaimTypes.Email, userInfo.Email),
                 ];
 
-                foreach (var role in userInfo.Roles)
+                if (userInfo.Roles is not null)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
+                    foreach (var role in userInfo.Roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
                 }
 
-                claims.AddRange(userInfo.Claims.Select(c => new Claim(c.Type, c.Value)));
+                if (userInfo.Claims is not null)
+                {
+                    claims.AddRange(
+                        userInfo.Claims
+                            .Where(c => !string.IsNullOrEmpty(c.Type) && !string.IsNullOrEmpty(c.Value))
+                            .Select(c => new Claim(c.Type!, c.Value!)));
+                }
 
                 var id = new ClaimsIdentity(claims, nameof(CustomAuthenticationStateProvider));
 
