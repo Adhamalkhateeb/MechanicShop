@@ -49,7 +49,7 @@ public sealed class RepairTask : AuditableEntity
     }
 
 
-    public Result<Updated> Update(string? name, decimal laborCost, RepairDurationInMinutes estimatedDurationInMins, List<Part> parts)
+    public Result<Updated> Update(string? name, decimal laborCost, RepairDurationInMinutes estimatedDurationInMins)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -75,7 +75,7 @@ public sealed class RepairTask : AuditableEntity
 
     public Result<Updated> UpsertParts(List<Part> incomingParts)
     {
-        _parts.RemoveAll(existing => incomingParts.All(incomingParts => incomingParts.Id != existing.Id));
+        _parts.RemoveAll(existing => incomingParts.All(p => p.Id != existing.Id));
 
         foreach (var incomingPart in incomingParts)
         {

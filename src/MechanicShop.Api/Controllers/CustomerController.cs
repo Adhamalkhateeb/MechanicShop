@@ -20,7 +20,7 @@ namespace MechanicShop.Api.Controllers;
 [Route("api/v{version:apiVersion}/customers")]
 [ApiVersion("1.0")]
 [Authorize]
-public sealed class CustomerController(ISender sender) : ApiController
+public sealed class CustomersController(ISender sender) : ApiController
 {
     [HttpGet]
     [ProducesResponseType<List<CustomerDto>>(StatusCodes.Status200OK)]

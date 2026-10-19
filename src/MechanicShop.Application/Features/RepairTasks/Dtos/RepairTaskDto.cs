@@ -7,6 +7,6 @@ public sealed record RepairTaskDto(
     string Name,
     decimal LaborCost,
     decimal TotalCost,
-    RepairDurationInMinutes EstimatedDurationInMinutes,
+    RepairDurationInMinutes EstimatedDurationInMins,
     IEnumerable<PartDto> Parts
 );

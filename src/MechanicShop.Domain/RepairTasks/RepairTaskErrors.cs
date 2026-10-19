@@ -8,8 +8,8 @@ public static class RepairTaskErrors
 
     public static Error LaborCostInvalid => Error.Validation("RepairTask:LaborCost:Invalid", "Labor cost must be between 10,000.");
 
-    public static Error PartsRequired => Error.Validation("RepairTask:Parts:Required", "Parts are required.");
-
     public static Error EstimatedDurationInvalid => Error.Validation("RepairTask:EstimatedDuration:Invalid", "Invalid duration selected.");
+
+    public static Error DuplicateName => Error.Conflict("RepairTask:Duplicate:Name", "A RepairTask with the same name already exists.");
 }
 

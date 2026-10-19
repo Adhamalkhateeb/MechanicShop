@@ -4,6 +4,7 @@ using System.Text.Json;
 
 using MechanicShop.Client.Models;
 using MechanicShop.Contracts.Requests.Customers;
+using MechanicShop.Contracts.Requests.RepairTasks;
 
 namespace MechanicShop.Client.Services;
 
@@ -135,6 +136,119 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
 
     #endregion
 
+    #region RepairTasks
+
+    public async Task<ApiResult<List<RepairTaskModel>>> GetRepairTasksAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("api/v1/repair-tasks");
+            if (response.IsSuccessStatusCode)
+            {
+                var repairTasks = await response.Content.ReadFromJsonAsync<List<RepairTaskModel>>();
+                return ApiResult<List<RepairTaskModel>>.Success(repairTasks ?? []);
+            }
+
+            return await HandleErrorResponseAsync<List<RepairTaskModel>>(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<List<RepairTaskModel>>(ex, "Failed to get repair tasks.");
+        }
+    }
+
+    public async Task<ApiResult<RepairTaskModel>> GetRepairTaskAsync(Guid repairTaskId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"api/v1/repair-tasks/{repairTaskId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var repairTask = await response.Content.ReadFromJsonAsync<RepairTaskModel>();
+
+                if (repairTask is null)
+                {
+                    return ApiResult<RepairTaskModel>.Failure("Failed to get repair task.");
+                }
+
+                return ApiResult<RepairTaskModel>.Success(repairTask!);
+            }
+
+            return await HandleErrorResponseAsync<RepairTaskModel>(response);
+
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<RepairTaskModel>(ex, $"Failed to get repair task {repairTaskId}.");
+        }
+    }
+
+    public async Task<ApiResult<RepairTaskModel>> CreateRepairTaskAsync(CreateRepairTaskRequest request)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/v1/repair-tasks", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var repairTask = await response.Content.ReadFromJsonAsync<RepairTaskModel>();
+
+                if (repairTask is null)
+                {
+                    return ApiResult<RepairTaskModel>.Failure("Failed to create repair task.");
+                }
+
+                return ApiResult<RepairTaskModel>.Success(repairTask!);
+            }
+
+            return await HandleErrorResponseAsync<RepairTaskModel>(response);
+
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<RepairTaskModel>(ex, "Failed to create repair task.");
+        }
+    }
+
+    public async Task<ApiResult> UpdateRepairTaskAsync(Guid repairTaskId, UpdateRepairTaskRequest request)
+    {
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/v1/repair-tasks/{repairTaskId}", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return ApiResult.Success();
+            }
+
+            return await HandleErrorResponseAsync(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync(ex, $"Failed to update repair task {repairTaskId}.");
+        }
+    }
+
+    public async Task<ApiResult> RemoveRepairTaskAsync(Guid repairTaskId)
+    {
+        try
+        {
+            var response = await _httpClient.DeleteAsync($"api/v1/repair-tasks/{repairTaskId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return ApiResult.Success();
+            }
+
+            return await HandleErrorResponseAsync(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync(ex, $"Failed to remove repair task {repairTaskId}.");
+        }
+    }
+    #endregion
 
     // Private Helper Methods
 

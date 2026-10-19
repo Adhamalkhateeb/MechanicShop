@@ -11,16 +11,15 @@ public sealed class Part : AuditableEntity
     public decimal Cost { get; private set; }
     public int Quantity { get; private set; }
 
-
     private Part() { }
 
-    private Part(Guid Id, string name, decimal cost, int quantity) : base(Id)
+    private Part(Guid Id, string name, decimal cost, int quantity)
+        : base(Id)
     {
         Name = name;
         Cost = cost;
         Quantity = quantity;
     }
-
 
     public static Result<Part> Create(Guid id, string? name, decimal cost, int quantity)
     {

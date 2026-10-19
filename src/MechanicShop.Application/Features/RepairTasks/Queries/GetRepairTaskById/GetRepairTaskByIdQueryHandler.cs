@@ -16,7 +16,7 @@ public sealed class GetRepairTaskByIdQueryHandler(ILogger<GetRepairTaskByIdQuery
     private readonly ILogger<GetRepairTaskByIdQueryHandler> _logger = logger;
     private readonly IAppDbContext _context = context;
 
-    public async Task<Result<RepairTaskDto>> Handle(GetRepairTaskByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<RepairTaskDto>> Handle(GetRepairTaskByIdQuery query, CancellationToken ct)
     {
         var repairTask = await _context.RepairTasks.AsNoTracking().Include(c => c.Parts)
                                     .FirstOrDefaultAsync(c => c.Id == query.RepairTaskId, ct);

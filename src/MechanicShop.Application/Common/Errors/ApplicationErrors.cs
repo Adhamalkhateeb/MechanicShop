@@ -25,4 +25,5 @@ public static class ApplicationErrors
         Error.NotFound(
                 "RepairTask.NotFound",
                 "Repair task does not exist.");
+
 }
