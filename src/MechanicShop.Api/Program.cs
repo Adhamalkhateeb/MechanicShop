@@ -50,9 +50,9 @@ else
 app.UseStaticFiles();
 app.UseCoreMiddlewares();
 
-app.MapControllers();
-
 app.UseAntiforgery();
+
+app.MapControllers();
 
 app.MapStaticAssets();
 

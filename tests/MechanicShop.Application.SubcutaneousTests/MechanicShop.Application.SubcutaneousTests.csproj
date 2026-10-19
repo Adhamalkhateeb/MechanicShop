@@ -11,8 +11,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="SSH.NET" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="Testcontainers.MsSql" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
