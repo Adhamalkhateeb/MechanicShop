@@ -4,6 +4,7 @@ using MechanicShop.Domain.Employees;
 using MechanicShop.Domain.Identity;
 using MechanicShop.Domain.RepairTasks;
 using MechanicShop.Domain.RepairTasks.Parts;
+using MechanicShop.Domain.Workorders;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,5 +20,7 @@ public interface IAppDbContext
     public DbSet<Part> Parts { get; }
 
     public DbSet<Employee> Employees { get; }
+
+    public DbSet<WorkOrder> WorkOrders { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

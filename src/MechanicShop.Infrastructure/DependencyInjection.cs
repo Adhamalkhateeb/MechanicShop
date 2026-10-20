@@ -4,6 +4,7 @@ using MechanicShop.Application.Common.Interfaces;
 using MechanicShop.Infrastructure.Data;
 using MechanicShop.Infrastructure.Data.Interceptors;
 using MechanicShop.Infrastructure.Identity;
+using MechanicShop.Infrastructure.Services;
 using MechanicShop.Infrastructure.Settings;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,7 @@ public static class DependencyInjection
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenProvider, TokenProvider>();
+        services.AddScoped<IWorkOrderPolicy, WorkOrderPolicy>();
 
         return services;
     }

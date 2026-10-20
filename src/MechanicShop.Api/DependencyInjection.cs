@@ -1,14 +1,20 @@
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+
 using Asp.Versioning;
+
 using MechanicShop.Api.Infrastructure;
 using MechanicShop.Api.OpenApi;
 using MechanicShop.Api.Services;
 using MechanicShop.Application.Common.Interfaces;
+using MechanicShop.Infrastructure.Settings;
+
 using Microsoft.AspNetCore.RateLimiting;
+
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+
 using Serilog;
 
 namespace MechanicShop.Api;
@@ -115,15 +121,14 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var allowedOrigins =
-            configuration.GetSection("AppSettings:AllowedOrigins").Get<string[]>() ?? [];
+        var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>()!;
 
         services.AddCors(options =>
             options.AddPolicy(
-                "DefaultCorsPolicy",
+                appSettings.CorsPolicyName,
                 policy =>
                     policy
-                        .WithOrigins(allowedOrigins)
+                        .WithOrigins(appSettings.AllowedOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()));

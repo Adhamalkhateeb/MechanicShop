@@ -263,6 +263,59 @@ namespace MechanicShop.Infrastructure.Migrations
                     b.ToTable("RepairTasks");
                 });
 
+            modelBuilder.Entity("MechanicShop.Domain.Workorders.WorkOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("EndAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("LaborId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Spot")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("StartAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("LaborId");
+
+                    b.HasIndex("State");
+
+                    b.HasIndex("VehicleId");
+
+                    b.HasIndex("StartAtUtc", "EndAtUtc");
+
+                    b.ToTable("WorkOrders");
+                });
+
             modelBuilder.Entity("MechanicShop.Infrastructure.Identity.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -461,6 +514,21 @@ namespace MechanicShop.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("RepairTaskWorkOrder", b =>
+                {
+                    b.Property<Guid>("RepairTasksId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WorkOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RepairTasksId", "WorkOrderId");
+
+                    b.HasIndex("WorkOrderId");
+
+                    b.ToTable("WorkOrderRepairTasks", (string)null);
+                });
+
             modelBuilder.Entity("MechanicShop.Domain.Customers.Vehicles.Vehicle", b =>
                 {
                     b.HasOne("MechanicShop.Domain.Customers.Customer", "Customer")
@@ -478,6 +546,25 @@ namespace MechanicShop.Infrastructure.Migrations
                         .WithMany("Parts")
                         .HasForeignKey("RepairTaskId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MechanicShop.Domain.Workorders.WorkOrder", b =>
+                {
+                    b.HasOne("MechanicShop.Domain.Employees.Employee", "Labor")
+                        .WithMany()
+                        .HasForeignKey("LaborId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MechanicShop.Domain.Customers.Vehicles.Vehicle", "Vehicle")
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Labor");
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -527,6 +614,21 @@ namespace MechanicShop.Infrastructure.Migrations
                     b.HasOne("MechanicShop.Infrastructure.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RepairTaskWorkOrder", b =>
+                {
+                    b.HasOne("MechanicShop.Domain.RepairTasks.RepairTask", null)
+                        .WithMany()
+                        .HasForeignKey("RepairTasksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MechanicShop.Domain.Workorders.WorkOrder", null)
+                        .WithMany()
+                        .HasForeignKey("WorkOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

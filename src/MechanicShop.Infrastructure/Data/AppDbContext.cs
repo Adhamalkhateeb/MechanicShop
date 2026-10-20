@@ -6,6 +6,7 @@ using MechanicShop.Domain.Employees;
 using MechanicShop.Domain.Identity;
 using MechanicShop.Domain.RepairTasks;
 using MechanicShop.Domain.RepairTasks.Parts;
+using MechanicShop.Domain.Workorders;
 using MechanicShop.Infrastructure.Identity;
 
 using MediatR;
@@ -27,6 +28,8 @@ namespace MechanicShop.Infrastructure.Data
         public DbSet<RepairTask> RepairTasks => Set<RepairTask>();
 
         public DbSet<Employee> Employees => Set<Employee>();
+
+        public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
 
         public override async Task<int> SaveChangesAsync(
             CancellationToken cancellationToken = default)
