@@ -250,6 +250,33 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
     }
     #endregion
 
+    #region Labors
+
+    public async Task<ApiResult<List<LaborModel>>> GetLaborsAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("api/v1/labors");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var labors = await response.Content.ReadFromJsonAsync<List<LaborModel>>();
+                return ApiResult<List<LaborModel>>.Success(labors ?? []);
+            }
+
+            return await HandleErrorResponseAsync<List<LaborModel>>(response);
+        }
+        catch (Exception ex)
+        {
+            return await HandleExceptionAsync<List<LaborModel>>(ex, "Failed to retrieve labors");
+        }
+    }
+
+
+    #endregion
+
+    #region Private Helpers
+
     // Private Helper Methods
 
     private static async Task<ApiResult<T>> HandleErrorResponseAsync<T>(
@@ -335,4 +362,6 @@ public class ServiceApi(IHttpClientFactory httpClientFactory, TimeZoneService ti
             _ => "An error occurred while processing your request.",
         };
     }
+    #endregion
+
 }

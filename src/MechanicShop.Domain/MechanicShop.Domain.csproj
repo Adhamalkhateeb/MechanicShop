@@ -4,4 +4,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Workorders\Events\" />
+    <Folder Include="Workorders\Billing\" />
+  </ItemGroup>
 </Project>
